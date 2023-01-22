@@ -20,8 +20,8 @@ public class ProductService {
     }
 
     public Product getProductById(UUID id) {
-        return productRepostitory.geProductById(id);
-    
+        Product p = productRepostitory.geProductById(id);
+        return p;
     }
 
     public boolean addProduct(Product product) {
