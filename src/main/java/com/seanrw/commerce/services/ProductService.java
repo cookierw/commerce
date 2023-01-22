@@ -19,12 +19,12 @@ public class ProductService {
         return productRepostitory.getAllProducts();
     }
 
-    public Product getProductById(UUID id) {
+    public Product getProductById(Long id) {
         Product p = productRepostitory.geProductById(id);
         return p;
     }
 
-    public boolean addProduct(Product product) {
+    public Product addProduct(Product product) {
         return productRepostitory.addProduct(product);
     }
 

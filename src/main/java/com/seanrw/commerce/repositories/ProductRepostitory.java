@@ -25,17 +25,17 @@ public class ProductRepostitory {
         return products;
     }
 
-    public Product geProductById(UUID id) {
+    public Product geProductById(Long id) {
         for (Product p : products) {
-            if (p.getId().compareTo(id) == 0) return p;
+            if (p.getId() == id) return p;
         }
 
         return null;
     }
 
-    public boolean addProduct(Product product) {
+    public Product addProduct(Product product) {
         this.products.add(product);
-        return true;
+        return products.get(products.size() - 1);
     }
 
 }

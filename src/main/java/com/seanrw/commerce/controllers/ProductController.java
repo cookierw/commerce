@@ -28,13 +28,13 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public Product getProductById(@PathVariable UUID id) {
-        return this.getProductById(id);
+    public Product getProductById(@PathVariable Long id) {
+        return this.productService.getProductById(id);
     }
 
     @PostMapping("/products")
-    public void createProduct(@RequestBody Product product) {
-        this.productService.addProduct(product);
+    public Product createProduct(@RequestBody Product product) {
+        return this.productService.addProduct(product);
     }
     
 }

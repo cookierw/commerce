@@ -10,7 +10,7 @@ import lombok.Setter;
 public class Product {
     
     @Getter
-    private UUID id;
+    private Long id;
     @Getter
     @Setter
     private String name;
@@ -21,8 +21,8 @@ public class Product {
     @Setter
     private String description;
 
-    public Product(String name, int price, String description) {
-        this.id = UUID.randomUUID();
+    public Product(long id, String name, int price, String description) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
