@@ -2,7 +2,6 @@ package com.seanrw.commerce.repositories;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 

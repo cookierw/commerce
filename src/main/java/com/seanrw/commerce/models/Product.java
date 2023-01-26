@@ -1,7 +1,5 @@
 package com.seanrw.commerce.models;
 
-import java.util.UUID;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
