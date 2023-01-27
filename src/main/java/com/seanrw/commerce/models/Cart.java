@@ -1,5 +1,6 @@
 package com.seanrw.commerce.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
@@ -22,6 +23,12 @@ public class Cart {
         this.id = id;
         this.userId = userId;
         this.products = products;
+    }
+
+    public Cart(Product product) {
+        super();
+        this.products = new ArrayList<>();
+        this.products.add(product);
     }
 
     public int getTotal() {
