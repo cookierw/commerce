@@ -24,7 +24,7 @@ public class ProductRepostitory {
         return products;
     }
 
-    public Product geProductById(Long id) {
+    public Product getProductById(Long id) {
         for (Product p : products) {
             if (p.getId() == id) return p;
         }
