@@ -34,7 +34,7 @@ public class ProductRepostitory {
 
     public Product addProduct(Product product) {
         this.products.add(product);
-        return products.get(products.size() - 1);
+        return product;
     }
 
 }
