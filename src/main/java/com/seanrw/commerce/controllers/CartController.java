@@ -9,7 +9,6 @@ import com.seanrw.commerce.models.Cart;
 import com.seanrw.commerce.services.CartService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -34,8 +33,7 @@ public class CartController {
     @PostMapping("/cart")
     public Cart addCart(@RequestBody Cart cart) {
         //TODO: process POST request
-        
-        return cart;
+        return cartService.addCart(cart);
     }
     
 }
