@@ -20,7 +20,7 @@ public class CartRepository {
         return this.carts;
     }
 
-    public Cart getCurrentCart() {
+    public Cart getActiveCart() {
         if (this.carts.size() < 1) return null;
 
         return this.carts.get(this.carts.size() - 1);

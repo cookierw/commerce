@@ -19,8 +19,8 @@ public class CartService {
         return cartRepo.getAllCarts();
     }
 
-    public Cart getCurrtentCart() {
-        return cartRepo.getCurrentCart();
+    public Cart getActiveCart() {
+        return cartRepo.getActiveCart();
     }
 
     public Cart getCartById(Long id) {

@@ -17,16 +17,21 @@ public class Cart {
     private Long userId;
     @Getter
     @Setter
+    private State state;
+    @Getter
+    @Setter
     private List<Product> products;
     
     public Cart(Long id, Long userId, List<Product> products) {
         this.id = id;
         this.userId = userId;
+        this.state = State.ACTIVE;
         this.products = products;
     }
 
     public Cart(Product product) {
         super();
+        this.state = State.ACTIVE;
         this.products = new ArrayList<>();
         this.products.add(product);
     }
@@ -42,5 +47,9 @@ public class Cart {
 
     public int getNumberOfProducts() {
         return this.products.size();
+    }
+
+    enum State {
+        ACTIVE, PURCHACED, SAVED
     }
 }
