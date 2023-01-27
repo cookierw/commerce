@@ -19,7 +19,7 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        Product p = productRepostitory.geProductById(id);
+        Product p = productRepostitory.getProductById(id);
         return p;
     }
 
