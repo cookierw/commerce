@@ -22,18 +22,18 @@ public class CartController {
     private CartService cartService;
 
     // Retrieves all carts, regardless of purchase state
-    @GetMapping("/cart")
+    @GetMapping("/api/v1/cart")
     public List<Cart> getAllCarts() {
         return cartService.getAllCarts();
     }
     
-    @GetMapping("/cart/{id}")
+    @GetMapping("/api/v1/cart/{id}")
     public Cart getCartById(@PathVariable Long id) {
         return cartService.getCartById(id);
     }
 
 
-    @PostMapping("/cart")
+    @PostMapping("/api/v1/cart")
     public Cart addCart(@RequestBody Product product) {
         //TODO: process POST request
         return cartService.addCart(product);
