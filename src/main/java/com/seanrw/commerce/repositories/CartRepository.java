@@ -7,6 +7,6 @@ import com.seanrw.commerce.models.Cart;
 public interface CartRepository extends JpaRepository<Cart, Long> {
     
     // Custom @Query
-    Cart findActiveCart();
+    // Cart findActiveCart();
 
 }

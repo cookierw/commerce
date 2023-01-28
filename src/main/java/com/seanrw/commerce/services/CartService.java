@@ -20,9 +20,9 @@ public class CartService {
         return cartRepo.findAll();
     }
 
-    public Cart getActiveCart() {
-        return cartRepo.findActiveCart();
-    }
+    // public Cart getActiveCart() {
+    //     return cartRepo.findActiveCart();
+    // }
 
     public Cart getCartById(Long id) {
         Optional<Cart> c = cartRepo.findById(id);
