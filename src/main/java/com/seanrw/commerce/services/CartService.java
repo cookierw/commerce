@@ -1,6 +1,7 @@
 package com.seanrw.commerce.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,20 +17,21 @@ public class CartService {
     private CartRepository cartRepo;
 
     public List<Cart> getAllCarts() {
-        return cartRepo.getAllCarts();
+        return cartRepo.findAll();
     }
 
     public Cart getActiveCart() {
-        return cartRepo.getActiveCart();
+        return cartRepo.findActiveCart();
     }
 
     public Cart getCartById(Long id) {
-        return cartRepo.getCartById(id);
+        Optional<Cart> c = cartRepo.findById(id);
+        return c.get();
     }
 
     public Cart addCart(Product product) {
         Cart cart = new Cart(product);
 
-        return cartRepo.addCart(cart);
+        return cartRepo.save(cart);
     }
 }
