@@ -1,6 +1,7 @@
 package com.seanrw.commerce.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,16 +16,16 @@ public class ProductService {
     private ProductRepostitory productRepostitory;
 
     public List<Product> getProducts() {
-        return productRepostitory.getAllProducts();
+        return productRepostitory.findAll();
     }
 
     public Product getProductById(Long id) {
-        Product p = productRepostitory.getProductById(id);
-        return p;
+        Optional<Product> p = productRepostitory.findById(id);
+        return p.get();
     }
 
     public Product addProduct(Product product) {
-        return productRepostitory.addProduct(product);
+        return productRepostitory.save(product);
     }
 
 }
