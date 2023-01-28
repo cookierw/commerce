@@ -8,5 +8,6 @@ import com.seanrw.commerce.models.Product;
 
 public interface ProductRepostitory extends JpaRepository<Product, Long> {
     
+    List<Product> findByName(String name);
 
 }
