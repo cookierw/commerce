@@ -23,10 +23,6 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     private Long id;
-    @Column(name = "user_id")
-    @Getter
-    @Setter
-    private Long userId;
     @Column(name = "state")
     @Getter
     @Setter
@@ -38,7 +34,6 @@ public class Cart {
     private List<Product> products;
     
     public Cart(Long id, Long userId, List<Product> products) {
-        this.userId = userId;
         this.state = State.ACTIVE;
         this.products = products;
     }
