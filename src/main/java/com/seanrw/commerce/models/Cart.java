@@ -3,27 +3,39 @@ package com.seanrw.commerce.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
+@Table(name = "carts")
 @NoArgsConstructor
 public class Cart {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     private Long id;
+    @Column(name = "user_id")
     @Getter
     @Setter
     private Long userId;
+    @Column(name = "state")
     @Getter
     @Setter
     private State state;
+    @Column(name = "product_ids")
     @Getter
     @Setter
     private List<Product> products;
     
     public Cart(Long id, Long userId, List<Product> products) {
-        this.id = id;
         this.userId = userId;
         this.state = State.ACTIVE;
         this.products = products;
@@ -50,6 +62,6 @@ public class Cart {
     }
 
     enum State {
-        ACTIVE, PURCHACED, SAVED
+        ACTIVE, PURCHASED, SAVED
     }
 }
