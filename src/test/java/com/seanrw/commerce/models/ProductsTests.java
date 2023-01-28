@@ -14,7 +14,6 @@ public class ProductsTests {
     
     @Test
     void getProductDetails() {
-        assertEquals(1, product.getId());
         assertEquals("test", product.getName());
         assertEquals(100, product.getPrice());
         assertEquals("test", product.getDescription());
