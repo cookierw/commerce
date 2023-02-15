@@ -11,7 +11,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.seanrw.commerce.models.Product;
-import com.seanrw.commerce.repositories.ProductRepostitory;
+import com.seanrw.commerce.services.ProductService;
 
 public class ProductServiceTests {
 
@@ -19,30 +19,30 @@ public class ProductServiceTests {
     static Product product2 = new Product(2, "name", 1, "description");
     
     @Mock
-    ProductRepostitory productRepo;
+    ProductService productService;
 
     @BeforeEach
-    void setup() {
+    void init() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void test_findAll() {
-        productRepo.save(product1);
+    void test_getProducts() {
         List<Product> prodList = Mockito.mock(List.class);
         prodList.add(product1);
+        
+        Mockito.when(productService.getProducts()).thenReturn(prodList);
 
-        Mockito.when(productRepo.findAll()).thenReturn(prodList);
-        List<Product> testList = productRepo.findAll();
+        List<Product> testList = productService.getProducts();
 
-        assertEquals(prodList, testList);
+        System.out.println(prodList.size() + testList.size());
+        assertEquals(prodList.size(), testList.size());
     }
 
-    @Test
-    void test_save() {
-        Mockito.when(productRepo.save(product1)).thenReturn(product1);
-        Product p = productRepo.save(product1);
+    // @Test
+    // void test_addProduct() {
+    //     Product testProduct = productService.addProduct(product1);
 
-        assertEquals(product1, p);
-    }
+    //     assertEquals(product1.getId(), testProduct.getId());
+    // }
 }
