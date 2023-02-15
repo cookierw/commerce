@@ -11,7 +11,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.seanrw.commerce.models.Product;
-import com.seanrw.commerce.services.ProductService;
 
 public class ProductServiceTests {
 
