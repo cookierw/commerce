@@ -16,7 +16,6 @@ import com.seanrw.commerce.services.ProductService;
 public class ProductServiceTests {
 
     static Product product1 = new Product(1, "name", 1, "description");
-    static Product product2 = new Product(2, "name", 1, "description");
     
     @Mock
     ProductService productService;
