@@ -44,4 +44,14 @@ public class User {
     @Setter
     private String password;
 
+    public User(
+        String username, String role, String preferredName, String email, String password
+    ) {
+        super();
+        this.username = username;
+        this.role = role;
+        this.preferredName = preferredName;
+        this.email = email;
+        this.password = password;
+    }
 }
