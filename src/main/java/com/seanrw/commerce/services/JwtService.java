@@ -3,6 +3,7 @@ package com.seanrw.commerce.services;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.seanrw.commerce.config.JwtConfig;
 import com.seanrw.commerce.dtos.responses.Principal;
@@ -11,6 +12,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 
+@Service
 public class JwtService {
     
     private JwtConfig jwtConfig;
