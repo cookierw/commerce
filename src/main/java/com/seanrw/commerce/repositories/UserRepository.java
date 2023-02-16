@@ -10,8 +10,14 @@ import com.seanrw.commerce.models.User;
 public interface UserRepository extends JpaRepository<User, Long> {
     
     @Query(value = "SELECT * FROM users WHERE username = ?1", nativeQuery = true)
-    List<User> findByUsername(String username);
+    User findByUsername(String username);
     
     @Query(value = "SELECT * FROM users WHERE email = ?1", nativeQuery = true)
-    List<User> findByEmail(String email);
+    User findByEmail(String email);
+
+    @Query(value = "SELECT (username) FROM users WHERE username = ?1", nativeQuery = true)
+    List<String> findAllUsernames(String username);
+
+    @Query(value = "SELECT * FROM users WHERE username = ?1 AND password = ?2")
+    User findByUsernameAndEmail(String username, String password);
 }
