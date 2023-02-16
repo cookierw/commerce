@@ -22,6 +22,14 @@ public class UserService {
     }
 
     public User signup(NewUserRequest newUserRequest) {
+        if (
+            isDuplicateUsername(newUserRequest.getUsername()) || 
+            !isValidUsername(newUserRequest.getUsername()) || 
+            !isValidPassword(newUserRequest.getPassword())
+        ) {
+            throw new InvalidAuthException("Invalid username or password.");
+        }
+
         User user = new User(
             newUserRequest.getUsername(), 
             "USER", 

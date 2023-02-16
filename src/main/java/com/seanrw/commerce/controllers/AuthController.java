@@ -10,7 +10,7 @@ import com.seanrw.commerce.dtos.requests.NewLoginRequest;
 import com.seanrw.commerce.dtos.requests.NewUserRequest;
 import com.seanrw.commerce.dtos.responses.Principal;
 import com.seanrw.commerce.models.User;
-import com.seanrw.commerce.services.TokenService;
+import com.seanrw.commerce.services.JwtService;
 import com.seanrw.commerce.services.UserService;
 
 @RestController
@@ -18,14 +18,14 @@ import com.seanrw.commerce.services.UserService;
 public class AuthController {
 
     private UserService userService;
-    private TokenService tokenService;
+    private JwtService jwtService;
 
     public AuthController(
         @Autowired UserService userService,
-        @Autowired TokenService tokenService
+        @Autowired JwtService jwtService
     ) {
         this.userService = userService;
-        this.tokenService = tokenService;
+        this.jwtService = jwtService;
     }
     
     @PostMapping("/login")
@@ -34,7 +34,7 @@ public class AuthController {
 
         Principal principal = userService.login(loginRequest);
 
-        String token = tokenService.tokenize(principal);
+        String token = jwtService.tokenize(principal);
         principal.setToken(token);
 
         return principal;

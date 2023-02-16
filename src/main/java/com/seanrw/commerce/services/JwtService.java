@@ -11,11 +11,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 
-public class TokenService {
+public class JwtService {
     
     private JwtConfig jwtConfig;
 
-    public TokenService(@Autowired JwtConfig jwtConfig) {
+    public JwtService(@Autowired JwtConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
     }
 
