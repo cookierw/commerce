@@ -14,7 +14,9 @@ public class ProductService {
     
     private ProductRepostitory productRepostitory;
 
-    public ProductService(@Autowired ProductRepostitory productRepostitory) {}
+    public ProductService(@Autowired ProductRepostitory productRepostitory) {
+        this.productRepostitory = productRepostitory;
+    }
 
     public List<Product> getProducts() {
         return productRepostitory.findAll();

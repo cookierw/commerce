@@ -17,7 +17,9 @@ public class UserService {
     
     private UserRepository userRepo;
 
-    public UserService(@Autowired UserRepository userRepo) {}
+    public UserService(@Autowired UserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
 
     public User signup(NewUserRequest newUserRequest) {
         User user = new User(

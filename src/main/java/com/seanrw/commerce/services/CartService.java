@@ -13,12 +13,14 @@ import com.seanrw.commerce.repositories.CartRepository;
 @Service
 public class CartService {
     
-    private CartRepository cartRepo;
+    private CartRepository cartRepository;
 
-    public CartService(@Autowired CartRepository cartRepo) {}
+    public CartService(@Autowired CartRepository cartRepo) {
+        this.cartRepository = cartRepo;
+    }
 
     public List<Cart> getAllCarts() {
-        return cartRepo.findAll();
+        return cartRepository.findAll();
     }
 
     // public Cart getActiveCart() {
@@ -26,13 +28,13 @@ public class CartService {
     // }
 
     public Cart getCartById(Long id) {
-        Optional<Cart> c = cartRepo.findById(id);
+        Optional<Cart> c = cartRepository.findById(id);
         return c.get();
     }
 
     public Cart addCart(Product product) {
         Cart cart = new Cart(product);
 
-        return cartRepo.save(cart);
+        return cartRepository.save(cart);
     }
 }
