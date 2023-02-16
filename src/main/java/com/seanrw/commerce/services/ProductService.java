@@ -12,8 +12,9 @@ import com.seanrw.commerce.repositories.ProductRepostitory;
 @Service
 public class ProductService {
     
-    @Autowired
     private ProductRepostitory productRepostitory;
+
+    public ProductService(@Autowired ProductRepostitory productRepostitory) {}
 
     public List<Product> getProducts() {
         return productRepostitory.findAll();

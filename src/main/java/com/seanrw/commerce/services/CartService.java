@@ -13,8 +13,9 @@ import com.seanrw.commerce.repositories.CartRepository;
 @Service
 public class CartService {
     
-    @Autowired
     private CartRepository cartRepo;
+
+    public CartService(@Autowired CartRepository cartRepo) {}
 
     public List<Cart> getAllCarts() {
         return cartRepo.findAll();
