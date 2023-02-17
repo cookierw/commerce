@@ -7,7 +7,7 @@ import com.seanrw.commerce.models.Cart;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
     
-    // @Query(value = "SELECT * FROM carts WHERE status = 0", nativeQuery = true)
-    // Cart findActiveCart();
+    @Query(value = "SELECT * FROM carts WHERE status = 'ACTIVE'", nativeQuery = true)
+    Cart findActiveCart();
 
 }

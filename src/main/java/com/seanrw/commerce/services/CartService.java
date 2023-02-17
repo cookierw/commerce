@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.seanrw.commerce.models.Cart;
 import com.seanrw.commerce.models.Product;
+import com.seanrw.commerce.models.Cart.State;
 import com.seanrw.commerce.repositories.CartRepository;
 
 @Service
@@ -23,9 +24,9 @@ public class CartService {
         return cartRepository.findAll();
     }
 
-    // public Cart getActiveCart() {
-    //     return cartRepo.findActiveCart();
-    // }
+    public Cart getActiveCart() {
+        return cartRepository.findActiveCart();
+    }
 
     public Cart getCartById(Long id) {
         Optional<Cart> c = cartRepository.findById(id);
@@ -33,8 +34,14 @@ public class CartService {
     }
 
     public Cart addCart(Product product) {
-        Cart cart = new Cart(product);
+        // Set most recent cart to SAVED
+        Cart activeCart = getActiveCart();
+        activeCart.setState(State.SAVED);
+        cartRepository.save(activeCart);
 
+        // New Carts are initialized as ACTIVE
+        Cart cart = new Cart(product);
+        
         return cartRepository.save(cart);
     }
 }

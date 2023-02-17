@@ -5,6 +5,8 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,9 +25,14 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     private Long id;
+    @Column(name = "user_id")
+    @Getter
+    @Setter
+    private Long userId;
     @Column(name = "state")
     @Getter
     @Setter
+    @Enumerated(EnumType.STRING)
     private State state;
     @Column(name = "product_ids")
     @OneToMany(mappedBy = "id")
@@ -34,6 +41,8 @@ public class Cart {
     private List<Product> products;
     
     public Cart(Long id, Long userId, List<Product> products) {
+        this.id = id;
+        this.userId = userId;
         this.state = State.ACTIVE;
         this.products = products;
     }
@@ -58,7 +67,7 @@ public class Cart {
         return this.products.size();
     }
 
-    enum State {
+    public enum State {
         ACTIVE, PURCHASED, SAVED
     }
 }
