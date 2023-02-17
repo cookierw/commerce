@@ -1,46 +1,66 @@
 package com.seanrw.commerce.services;
 
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.seanrw.commerce.models.Product;
+import com.seanrw.commerce.repositories.ProductRepository;
 
 public class ProductServiceTests {
 
-    static Product product1 = new Product(1, "name", 1, "description");
-    
+    private AutoCloseable closeable;
+    private List<Product> mockProductList;
+
     @Mock
+    ProductRepository productRepository;
+    
+    @InjectMocks
     ProductService productService;
 
     @BeforeEach
     void init() {
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
+
+        mockProductList = new ArrayList<>();
+        mockProductList.add(new Product(1, "name", 1, "description"));
+        mockProductList.add(new Product(2, "name", 1, "description"));
+        mockProductList.add(new Product(3, "name", 1, "description"));
+    }
+
+    @AfterEach
+    void teardown() throws Exception {
+        closeable.close();
+
+        mockProductList = Collections.emptyList();
     }
 
     @Test
-    void test_getProducts() {
-        List<Product> prodList = Mockito.mock(List.class);
-        prodList.add(product1);
-        
-        Mockito.when(productService.getProducts()).thenReturn(prodList);
+    void getProductsShouldReturnProductsList() {
+        Mockito.when(productRepository.findAll()).thenReturn(mockProductList);
 
-        List<Product> testList = productService.getProducts();
-
-        System.out.println(prodList.size() + testList.size());
-        assertEquals(prodList.size(), testList.size());
+        assertEquals(mockProductList, productService.getProducts());
     }
 
-    // @Test
-    // void test_addProduct() {
-    //     Product testProduct = productService.addProduct(product1);
+    @Test
+    void getProductByIdShouldReturnProduct() {
+        Mockito.when(productRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockProductList.get(0)));
 
-    //     assertEquals(product1.getId(), testProduct.getId());
-    // }
+        assertEquals(mockProductList.get(0), productService.getProductById(1L));
+    }
+
+    @Test
+    void addProductShouldSaveAndReturnNewProduct() {
+        Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(mockProductList.get(0));
+
+        assertEquals(mockProductList.get(0), productService.addProduct(mockProductList.get(0)));
+    }
 }
