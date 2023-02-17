@@ -1,11 +1,13 @@
 package com.seanrw.commerce.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,45 +19,86 @@ import org.mockito.MockitoAnnotations;
 import com.seanrw.commerce.services.CartService;
 import com.seanrw.commerce.repositories.CartRepository;
 import com.seanrw.commerce.models.Cart;
+import com.seanrw.commerce.models.Cart.State;
 import com.seanrw.commerce.models.Product;
 
 public class CartServiceTests {
     
-    static Product product1 = new Product(1, "name", 1, "description");
-    // static Cart cart1 = new Cart(product1);
+    private AutoCloseable closeable;
+    private List<Cart> mockCartList;
+    private List<Product> mockProductList;
 
-    // @Mock
-    // CartRepository cartRepo;
+    private final Product mockProduct = new Product(1, "Product 1", 1, "description");
+    private final Cart mockActiveCart = new Cart(1L, 1L, Collections.emptyList());
+    // private final Cart mockInactiveCart = new Cart(1L, 1L, Collections.emptyList());
+
     @Mock
-    CartService cartService;
+    private CartRepository cartRepository;
+
+    @InjectMocks
+    private CartService cartService;
 
     @BeforeEach
-    void init() {
-        MockitoAnnotations.openMocks(this);
+    void setup() {
+        closeable = MockitoAnnotations.openMocks(this);
         
+        mockProductList = new ArrayList<>();
+        mockProductList.add(mockProduct);
+
+        mockCartList = new ArrayList<>();
+        mockActiveCart.setProducts(mockProductList);
+        mockCartList.add(mockActiveCart);
+    }
+
+    @AfterEach
+    void clean() throws Exception {
+        closeable.close();
+
+        mockCartList = Collections.emptyList();
+        mockProductList = Collections.emptyList();
     }
     
     @Test
-    void test_createNewCart() {
-        Cart cart = new Cart(product1);
-        
-        Mockito.when(cartService.addCart(product1)).thenReturn(cart);
-        
-        Cart testCart = cartService.addCart(product1);
-        
-        assertEquals(cart.getNumberOfProducts(), testCart.getNumberOfProducts());
-        assertEquals(cart.getProducts().get(0).getId(), testCart.getProducts().get(0).getId());
+    void createNewCartShouldReturnNewCartFromGivenProduct() {
+        Mockito.when(cartRepository.save(Mockito.any(Cart.class))).thenReturn(mockActiveCart);
+
+        assertEquals(mockActiveCart, cartService.addCart(mockProduct));
     }
     
     @Test
-    void test_getCartById() {
-        Cart cart = new Cart(product1);
-        
-        Mockito.when(cartService.getCartById(1L)).thenReturn(cart);
+    void getAllCartsShouldReturnListOfCarts() {
+        Mockito.when(cartRepository.findAll()).thenReturn(mockCartList);
 
-        Cart testCart = cartService.getCartById(1L);
+        assertEquals(mockCartList, cartService.getAllCarts());
+    }
 
-        assertEquals(cart.getNumberOfProducts(), testCart.getNumberOfProducts());
-        assertEquals(cart.getProducts().get(0).getId(), testCart.getProducts().get(0).getId());
+    @Test
+    void getCartByValidIdShouldReturnCart() {
+        Mockito.when(cartRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockActiveCart));
+
+        assertEquals(mockActiveCart, cartService.getCartById(1L));
+    }
+
+    @Test
+    void findActiveCartShouldReturnOneCart() {
+        Mockito.when(cartRepository.findActiveCart()).thenReturn(mockActiveCart);
+
+        assertEquals(mockActiveCart, cartService.getActiveCart());
+    }
+
+    @Test
+    void creatingNewCartShouldMakeMostRecentCartInactive() {
+        List<Cart> testCartList = mockCartList;
+        Cart testCart = mockActiveCart;
+        testCart.setState(State.SAVED);
+        testCartList.add(testCart);
+
+        Mockito.when(cartRepository.findActiveCart()).thenReturn(mockActiveCart);
+        Mockito.when(cartRepository.save(Mockito.any(Cart.class))).thenReturn(mockActiveCart);
+        Mockito.when(cartRepository.findAll()).thenReturn(testCartList);
+
+        cartService.addCart(mockProduct);
+
+        assertEquals(testCartList, cartService.getAllCarts());
     }
 }
