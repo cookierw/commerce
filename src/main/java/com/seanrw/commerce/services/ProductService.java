@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.seanrw.commerce.models.Product;
-import com.seanrw.commerce.repositories.ProductRepostitory;
+import com.seanrw.commerce.repositories.ProductRepository;
 
 @Service
 public class ProductService {
     
-    private ProductRepostitory productRepostitory;
+    private ProductRepository productRepostitory;
 
-    public ProductService(@Autowired ProductRepostitory productRepostitory) {
+    public ProductService(@Autowired ProductRepository productRepostitory) {
         this.productRepostitory = productRepostitory;
     }
 
