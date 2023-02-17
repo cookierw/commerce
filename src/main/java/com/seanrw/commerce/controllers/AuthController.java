@@ -1,14 +1,18 @@
 package com.seanrw.commerce.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.seanrw.commerce.dtos.requests.NewLoginRequest;
 import com.seanrw.commerce.dtos.requests.NewUserRequest;
 import com.seanrw.commerce.dtos.responses.Principal;
+import com.seanrw.commerce.exceptions.InvalidAuthException;
 import com.seanrw.commerce.models.User;
 import com.seanrw.commerce.services.JwtService;
 import com.seanrw.commerce.services.UserService;
@@ -47,5 +51,11 @@ public class AuthController {
         if (user == null) return "FAIL";
 
         return "Success";
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(InvalidAuthException.class)
+    public String handleInvalidAuthException (InvalidAuthException exception) {
+        return exception.getMessage();
     }
 }
