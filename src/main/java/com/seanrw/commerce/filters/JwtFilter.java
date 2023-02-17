@@ -1,5 +1,7 @@
 package com.seanrw.commerce.filters;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -11,7 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import io.jsonwebtoken.*;
 
+import com.seanrw.commerce.config.JwtConfig;
+
 public class JwtFilter implements Filter {
+
+    @Autowired
+    JwtConfig jwtConfig;
     
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain
@@ -20,6 +27,7 @@ public class JwtFilter implements Filter {
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
         final String authHeader = request.getHeader("authorization");
+
         if ("OPTIONS".equals(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
             filterChain.doFilter(req, res);
@@ -29,7 +37,7 @@ public class JwtFilter implements Filter {
             }
             final String token = authHeader.substring(7);
             final Claims claims = Jwts.parser()
-                    .setSigningKey("secretkey")
+                    .setSigningKey(jwtConfig.getSigningKey())
                     .parseClaimsJws(token)
                     .getBody();
             request.setAttribute("claims", claims);
