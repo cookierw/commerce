@@ -21,23 +21,23 @@ public class ProductServiceTests {
     private List<Product> mockProductList;
 
     @Mock
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
     
     @InjectMocks
-    ProductService productService;
+    private ProductService productService;
 
     @BeforeEach
-    void init() {
+    void setup() {
         closeable = MockitoAnnotations.openMocks(this);
 
         mockProductList = new ArrayList<>();
-        mockProductList.add(new Product(1, "name", 1, "description"));
-        mockProductList.add(new Product(2, "name", 1, "description"));
-        mockProductList.add(new Product(3, "name", 1, "description"));
+        mockProductList.add(new Product(1, "Product 1", 1, "description"));
+        mockProductList.add(new Product(2, "Product 2", 1, "description"));
+        mockProductList.add(new Product(3, "Product 3", 1, "description"));
     }
 
     @AfterEach
-    void teardown() throws Exception {
+    void clean() throws Exception {
         closeable.close();
 
         mockProductList = Collections.emptyList();
