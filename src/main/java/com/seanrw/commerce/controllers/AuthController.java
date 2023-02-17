@@ -31,18 +31,6 @@ public class AuthController {
         this.userService = userService;
         this.jwtService = jwtService;
     }
-    
-    @PostMapping("/login")
-    public Principal login(@RequestBody NewLoginRequest loginRequest) {
-        // TODO: validation
-
-        Principal principal = userService.login(loginRequest);
-
-        String token = jwtService.tokenize(principal);
-        principal.setToken(token);
-
-        return principal;
-    }
 
     @PostMapping("/register")
     public String register(@RequestBody NewUserRequest userRequest) {
@@ -51,6 +39,16 @@ public class AuthController {
         if (user == null) return "FAIL";
 
         return "Success";
+    }
+    
+    @PostMapping("/login")
+    public Principal login(@RequestBody NewLoginRequest loginRequest) {
+        Principal principal = userService.login(loginRequest);
+
+        String token = jwtService.tokenize(principal);
+        principal.setToken(token);
+
+        return principal;
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)

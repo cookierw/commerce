@@ -42,8 +42,10 @@ public class UserService {
     }
 
     public Principal login(NewLoginRequest newLoginRequest) {
-        User validUser = userRepo.findByUsernameAndEmail(newLoginRequest.getUsername(), newLoginRequest.getPassword());
+        User user = userRepo.findByUsername(newLoginRequest.getUsername());
+        if (user == null) throw new InvalidAuthException("User not found.");
 
+        User validUser = userRepo.findByUsernameAndEmail(newLoginRequest.getUsername(), newLoginRequest.getPassword());
         if (validUser == null) throw new InvalidAuthException("Invalid username or password.");
 
         return new Principal(validUser.getId(), validUser.getUsername(), validUser.getRole());
