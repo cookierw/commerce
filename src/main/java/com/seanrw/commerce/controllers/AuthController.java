@@ -18,7 +18,7 @@ import com.seanrw.commerce.services.JwtService;
 import com.seanrw.commerce.services.UserService;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/auth")
 public class AuthController {
 
     private UserService userService;
