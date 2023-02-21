@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.seanrw.commerce.dtos.requests.NewLoginRequest;
+import com.seanrw.commerce.dtos.responses.LoginSuccessResponse;
 import com.seanrw.commerce.services.TokenService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +26,16 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
-    @PostMapping("/token")
-    public String token(@RequestBody NewLoginRequest userLogin) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLogin.getUsername(), userLogin.getPassword()));
+    @PostMapping("/login")
+    public LoginSuccessResponse login(@RequestBody NewLoginRequest userLogin) {
+        return new LoginSuccessResponse(userLogin.getUsername(), generateToken(userLogin));
+    }
+
+    private String generateToken(NewLoginRequest userLogin) {
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(userLogin.getUsername(), userLogin.getPassword())
+        );
+        
         return tokenService.generateToken(authentication);
     }
     
