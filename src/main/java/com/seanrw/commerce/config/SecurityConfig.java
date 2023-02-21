@@ -5,7 +5,9 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,51 +23,77 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     
-    @Value("${jwt.key}")
-    private String jwtKey;
+    // @Value("${jwt.key}")
+    // private String jwtKey;
+
+    private RSAKey rsaKey;
+
+    // BAD - don't do this!
+    // Bean
+    // public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    //     return authenticationConfiguration.getAuthenticationManager();
+    // }
+
+    // Do this instead
+    // Will provide us a Manager
+    @Bean
+    public AuthenticationManager authManager(UserDetailsService userDetailsService) {
+        var authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        return new ProviderManager(authProvider);
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
         return new InMemoryUserDetailsManager(
-            User.withUsername("seanrw")
-                .password("{noop}password")                               // {noop}: no password encoding
-                .authorities("READ", "ROLE_USER")
-                .build()
+                User.withUsername("seanrw")
+                        .password("{noop}password")
+                        .authorities("read")
+                        .build()
         );
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .httpBasic().disable()
+                .formLogin(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/auth/token").hasRole("USER")
-                    .anyRequest().hasAuthority("SCOPE_READ")              // Every request must have READ authority
+                .authorizeHttpRequests( auth -> auth
+                        .requestMatchers("/token").permitAll()
+                        .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> 
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // No sessions needed
-                )
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)          // Use built-in JWT support
-                .httpBasic(Customizer.withDefaults())                               // Authentication mechanism
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .build();
     }
 
     @Bean
-    JwtEncoder jwtEncoder() {
-        return new NimbusJwtEncoder(new ImmutableSecret<>(jwtKey.getBytes()));
+    public JWKSource<SecurityContext> jwkSource() {
+        rsaKey = Jwks.generateRsa();
+        JWKSet jwkSet = new JWKSet(rsaKey);
+        return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
     }
 
     @Bean
-    JwtDecoder jwtDecoder() {
-        byte[] bytes = jwtKey.getBytes();
-        SecretKeySpec originalKey = new SecretKeySpec(bytes, 0, bytes.length, "RSA");
-
-        return NimbusJwtDecoder.withSecretKey(originalKey).macAlgorithm(MacAlgorithm.HS256).build();
+    JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwks) {
+        return new NimbusJwtEncoder(jwks);
     }
+
+    @Bean
+    JwtDecoder jwtDecoder() throws JOSEException {
+         return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
+    }
+
 }
