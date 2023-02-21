@@ -5,9 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.seanrw.commerce.dtos.requests.NewLoginRequest;
 import com.seanrw.commerce.dtos.requests.NewUserRequest;
-import com.seanrw.commerce.dtos.responses.Principal;
 import com.seanrw.commerce.exceptions.InvalidAuthException;
 import com.seanrw.commerce.models.User;
 import com.seanrw.commerce.repositories.UserRepository;
@@ -41,15 +39,15 @@ public class UserService {
         return userRepo.save(user);
     }
 
-    public Principal login(NewLoginRequest newLoginRequest) {
-        User user = userRepo.findByUsername(newLoginRequest.getUsername());
-        if (user == null) throw new InvalidAuthException("User not found.");
+    // public Principal login(NewLoginRequest newLoginRequest) {
+    //     User user = userRepo.findByUsername(newLoginRequest.getUsername());
+    //     if (user == null) throw new InvalidAuthException("User not found.");
 
-        User validUser = userRepo.findByUsernameAndEmail(newLoginRequest.getUsername(), newLoginRequest.getPassword());
-        if (validUser == null) throw new InvalidAuthException("Invalid username or password.");
+    //     User validUser = userRepo.findByUsernameAndEmail(newLoginRequest.getUsername(), newLoginRequest.getPassword());
+    //     if (validUser == null) throw new InvalidAuthException("Invalid username or password.");
 
-        return new Principal(validUser.getId(), validUser.getUsername(), validUser.getRole());
-    }
+    //     return new Principal(validUser.getId(), validUser.getUsername(), validUser.getRole());
+    // }
 
     /*
      *  Validation
