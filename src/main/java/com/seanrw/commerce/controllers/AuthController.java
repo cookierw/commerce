@@ -5,7 +5,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.seanrw.commerce.dtos.requests.NewLoginRequest;
@@ -28,6 +27,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public LoginSuccessResponse login(@RequestBody NewLoginRequest userLogin) {
+        log.info("User " + userLogin.getUsername() + " attempting to log in.");
+
         return new LoginSuccessResponse(userLogin.getUsername(), generateToken(userLogin));
     }
 
@@ -36,6 +37,8 @@ public class AuthController {
             new UsernamePasswordAuthenticationToken(userLogin.getUsername(), userLogin.getPassword())
         );
         
+        log.info("User " + userLogin.getUsername() + " successfully authenticated.");
+
         return tokenService.generateToken(authentication);
     }
     
