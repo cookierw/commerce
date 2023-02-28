@@ -1,6 +1,7 @@
 package com.seanrw.commerce.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,10 +11,10 @@ import com.seanrw.commerce.models.User;
 public interface UserRepository extends JpaRepository<User, Long> {
     
     @Query(value = "SELECT * FROM users WHERE username = ?1", nativeQuery = true)
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
     
     @Query(value = "SELECT * FROM users WHERE email = ?1", nativeQuery = true)
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     @Query(value = "SELECT (username) FROM users WHERE username = ?1", nativeQuery = true)
     List<String> findAllUsernames(String username);

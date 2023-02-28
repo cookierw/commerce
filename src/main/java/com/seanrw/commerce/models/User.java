@@ -47,11 +47,22 @@ public class User {
     public User(
         String username, String role, String preferredName, String email, String password
     ) {
-        super();
+//        super();
         this.username = username;
         this.role = role;
         this.preferredName = preferredName;
         this.email = email;
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", role='" + role + '\'' +
+                ", preferredName='" + preferredName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

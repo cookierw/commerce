@@ -29,10 +29,10 @@ public class AuthController {
     public LoginSuccessResponse login(@RequestBody NewLoginRequest userLogin) {
         log.info("User " + userLogin.getUsername() + " attempting to log in.");
 
-        return new LoginSuccessResponse(userLogin.getUsername(), generateToken(userLogin));
+        return new LoginSuccessResponse(userLogin.getUsername(), getToken(userLogin));
     }
 
-    private String generateToken(NewLoginRequest userLogin) {
+    private String getToken(NewLoginRequest userLogin) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(userLogin.getUsername(), userLogin.getPassword())
         );
