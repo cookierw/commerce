@@ -3,7 +3,9 @@ package com.seanrw.commerce.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.seanrw.commerce.exceptions.CartNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import com.seanrw.commerce.models.Cart;
@@ -25,12 +27,23 @@ public class CartService {
     }
 
     public Cart getActiveCart() {
-        return cartRepository.findActiveCart();
+        Cart cart = cartRepository.findActiveCart();
+
+        if (cart == null) {
+            throw new CartNotFoundException("No active cart found");
+        }
+
+        return cart;
     }
 
     public Cart getCartById(Long id) {
-        Optional<Cart> c = cartRepository.findById(id);
-        return c.get();
+        Optional<Cart> cart = cartRepository.findById(id);
+
+        if (cart.isEmpty()) {
+            throw new CartNotFoundException("No cart exists with id " + id);
+        }
+
+        return cart.get();
     }
 
     public Cart addCart(Product product) {
@@ -43,5 +56,13 @@ public class CartService {
         Cart cart = new Cart(product);
         
         return cartRepository.save(cart);
+    }
+
+    public Cart update(Cart cart) throws OptimisticLockingFailureException {
+        return cartRepository.save(cart);
+    }
+
+    public void deleteByCart(Cart cart) throws OptimisticLockingFailureException {
+        cartRepository.delete(cart);
     }
 }
