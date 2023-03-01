@@ -2,11 +2,10 @@ package com.seanrw.commerce.services;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.seanrw.commerce.dtos.requests.NewUserRequest;
-import com.seanrw.commerce.exceptions.InvalidAuthException;
 import com.seanrw.commerce.models.User;
 import com.seanrw.commerce.repositories.UserRepository;
 
@@ -14,26 +13,28 @@ import com.seanrw.commerce.repositories.UserRepository;
 public class UserService {
     
     private UserRepository userRepo;
+    private final PasswordEncoder encoder;
 
-    public UserService(@Autowired UserRepository userRepo) {
+    public UserService(UserRepository userRepo, PasswordEncoder encoder) {
         this.userRepo = userRepo;
+        this.encoder = encoder;
     }
 
     public User signup(NewUserRequest newUserRequest) {
-        if (
-            isDuplicateUsername(newUserRequest.getUsername())   || 
-            !isValidUsername(newUserRequest.getUsername())      || 
-            !isValidPassword(newUserRequest.getPassword())
-        ) {
-            throw new InvalidAuthException("Invalid username or password.");
-        }
+//        if (
+//            isDuplicateUsername(newUserRequest.getUsername())   ||
+//            !isValidUsername(newUserRequest.getUsername())      ||
+//            !isValidPassword(newUserRequest.getPassword())
+//        ) {
+//            throw new InvalidAuthException("Invalid username or password.");
+//        }
 
         User user = new User(
             newUserRequest.getUsername(), 
-            "USER", 
+            "ROLE_USER",
             newUserRequest.getPreferredName(), 
             newUserRequest.getEmail(), 
-            newUserRequest.getPassword()
+            encoder.encode(newUserRequest.getPassword())
         );
 
         return userRepo.save(user);

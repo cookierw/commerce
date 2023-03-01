@@ -1,5 +1,9 @@
 package com.seanrw.commerce.controllers;
 
+import com.seanrw.commerce.dtos.requests.NewUserRequest;
+import com.seanrw.commerce.models.User;
+import com.seanrw.commerce.services.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,10 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthController {
 
     private final TokenService tokenService;
+    private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthController(TokenService tokenService, AuthenticationManager authenticationManager) {
+    public AuthController(TokenService tokenService, UserService userService, AuthenticationManager authenticationManager) {
         this.tokenService = tokenService;
+        this.userService = userService;
         this.authenticationManager = authenticationManager;
     }
 
@@ -30,6 +36,14 @@ public class AuthController {
         log.info("User " + userLogin.getUsername() + " attempting to log in.");
 
         return new LoginSuccessResponse(userLogin.getUsername(), getToken(userLogin));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<String> signup(@RequestBody NewUserRequest newUserRequest) {
+        User user = userService.signup(newUserRequest);
+        log.info("User " + user.getUsername() + " created successfully");
+
+        return ResponseEntity.ok().build();
     }
 
     private String getToken(NewLoginRequest userLogin) {

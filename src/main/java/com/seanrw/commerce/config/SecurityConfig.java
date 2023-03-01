@@ -29,9 +29,6 @@ import com.nimbusds.jose.proc.SecurityContext;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    
-    // @Value("${jwt.key}")
-    // private String jwtKey;
 
     private RSAKey rsaKey;
     private final JpaUserDetailsService jpaUserDetailsService;
@@ -57,8 +54,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests( auth -> auth
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers("/register").permitAll()
-//                        .anyRequest().authenticated()
+                        .requestMatchers("/signup").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .userDetailsService(jpaUserDetailsService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
