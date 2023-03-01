@@ -1,6 +1,7 @@
 package com.seanrw.commerce.controllers;
 
 import com.seanrw.commerce.dtos.requests.NewUserRequest;
+import com.seanrw.commerce.exceptions.InvalidSignupException;
 import com.seanrw.commerce.models.User;
 import com.seanrw.commerce.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +41,12 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody NewUserRequest newUserRequest) {
-        User user = userService.signup(newUserRequest);
-        log.info("User " + user.getUsername() + " created successfully");
+        try {
+            User user = userService.signup(newUserRequest);
+            log.info("User " + user.getUsername() + " created successfully");
+        } catch (InvalidSignupException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
 
         return ResponseEntity.ok().build();
     }
