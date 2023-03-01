@@ -23,12 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthController {
 
     private final TokenService tokenService;
-    private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
     public AuthController(TokenService tokenService, UserService userService, AuthenticationManager authenticationManager) {
         this.tokenService = tokenService;
-        this.userService = userService;
         this.authenticationManager = authenticationManager;
     }
 
@@ -37,18 +35,6 @@ public class AuthController {
         log.info("User " + userLogin.getUsername() + " attempting to log in.");
 
         return new LoginSuccessResponse(userLogin.getUsername(), getToken(userLogin));
-    }
-
-    @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody NewUserRequest newUserRequest) {
-        try {
-            User user = userService.signup(newUserRequest);
-            log.info("User " + user.getUsername() + " created successfully");
-        } catch (InvalidSignupException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-
-        return ResponseEntity.ok().build();
     }
 
     private String getToken(NewLoginRequest userLogin) {
